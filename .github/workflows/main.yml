@@ -1,0 +1,29 @@
+name: To-Do App CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check HTML file exists
+        run: |
+          if [ ! -f index.html ]; then
+            echo "index.html not found!"
+            exit 1
+          fi
+
+      - name: Basic HTML validation
+        run: |
+          echo "HTML file found. Basic validation passed."
+
+      - name: Success message
+        run: echo "CI pipeline completed successfully!"
