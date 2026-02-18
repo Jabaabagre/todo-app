@@ -87,6 +87,7 @@
       color: #666;
       text-align: center;
     }
+
   </style>
 </head>
 <body>
@@ -181,6 +182,41 @@
     }
 
     healthCheck();
+
+    function logAction(action, taskText) {
+  console.log(`Action: ${action}, Task: ${taskText}`);
+}
+
+// Update addTask
+function addTask() {
+  const text = taskInput.value.trim();
+  if (!text) return;
+
+  tasks.push({ text, completed: false });
+  taskInput.value = '';
+  saveTasks();
+  renderTasks();
+  logAction("Added", text);
+}
+
+// Update toggleTask
+function toggleTask(index) {
+  tasks[index].completed = !tasks[index].completed;
+  saveTasks();
+  renderTasks();
+  logAction("Toggled", tasks[index].text);
+}
+
+// Update deleteTask
+function deleteTask(index) {
+  const text = tasks[index].text;
+  tasks.splice(index, 1);
+  saveTasks();
+  renderTasks();
+  logAction("Deleted", text);
+}
+
+
   </script>
 </body>
 </html>
