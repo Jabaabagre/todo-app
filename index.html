@@ -81,6 +81,18 @@
 
     .delete-btn:hover { background: #dc2626; }
 
+    #deleteCompletedBtn {
+      margin-top: 10px;
+      width: 100%;
+      background: #f59e0b; /* yellow/orange */
+      color: white;
+    }
+
+    #deleteCompletedBtn:hover {
+      background: #d97706;
+    }
+
+
     .health {
       margin-top: 12px;
       font-size: 12px;
@@ -100,6 +112,8 @@
     </div>
 
     <ul id="taskList"></ul>
+
+    <button id="deleteCompletedBtn">Delete Completed Tasks</button>
 
     <div class="health" id="healthStatus">Status: OK</div>
   </div>
@@ -216,6 +230,17 @@ function deleteTask(index) {
   logAction("Deleted", text);
 }
 
+document.getElementById('deleteCompletedBtn').addEventListener('click', function() {
+  // Filter out completed tasks
+  const beforeCount = tasks.length;
+  tasks = tasks.filter(task => !task.completed);
+  const afterCount = tasks.length;
+
+  saveTasks();
+  renderTasks();
+
+  console.log(`Deleted completed tasks: ${beforeCount - afterCount}`);
+});
 
   </script>
 </body>
