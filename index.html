@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple To‑Do App</title>
+
+  <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+
+    body {
+      margin: 0;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .app {
+      background: #ffffff;
+      padding: 24px;
+      width: 360px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover { background: #1d4ed8; }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    li.completed span {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .delete-btn {
+      background: #ef4444;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .delete-btn:hover { background: #dc2626; }
+
+    .health {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>To‑Do App</h1>
+
+    <div class="input-group">
+      <input id="taskInput" type="text" placeholder="Enter a task" />
+      <button onclick="addTask()">Add</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <div class="health" id="healthStatus">Status: OK</div>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+
+    // Load tasks from localStorage
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    function saveTasks() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+
+        if (task.completed) li.classList.add('completed');
+
+        const left = document.createElement('div');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.onchange = () => toggleTask(index);
+
+        const span = document.createElement('span');
+        span.textContent = task.text;
+
+        left.appendChild(checkbox);
+        left.appendChild(span);
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.className = 'delete-btn';
+        delBtn.onclick = () => deleteTask(index);
+
+        li.appendChild(left);
+        li.appendChild(delBtn);
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const text = taskInput.value.trim();
+      if (!text) return;
+
+      tasks.push({ text, completed: false });
+      taskInput.value = '';
+      saveTasks();
+      renderTasks();
+    }
+
+    function toggleTask(index) {
+      tasks[index].completed = !tasks[index].completed;
+      saveTasks();
+      renderTasks();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
+    }
+
+    // Initial render
+    renderTasks();
+
+    // Basic health check simulation
+    function healthCheck() {
+      try {
+        document.getElementById('healthStatus').textContent = 'Status: OK';
+      } catch (e) {
+        console.error('Health check failed', e);
+      }
+    }
+
+    healthCheck();
+  </script>
+</body>
+</html>
